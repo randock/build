@@ -1,0 +1,3 @@
+phpstan:
+    level: 5
+    standard: phpstan.neon
