@@ -4,11 +4,10 @@
     <!-- service name used for docker commands -->
     <property name="docker-compose" value="docker-compose"/>
     <property name="docker.service_name" value="fpm" />
-    <property name="phpqa.config_dir" value="vendor/randock/common-bundle" />
+    <property name="phpqa.config_dir" value="vendor/randock/build" />
 
     <!-- symfony methods -->
-    <import file="./build.symfony3.xml" as="sf3" />
-    <import file="./build.symfony4.xml" as="sf4" />
+    <import file="./build.symfony.xml" />
 
     <!-- xdebug methods -->
     <import file="./build.xdebug.xml" />

@@ -10,6 +10,10 @@ $finder = PhpCsFixer\Finder::create()
     // symfony 3+
     ->exclude('var')
 
+    // symfony 4+
+    ->exclude('node_modules')
+    ->exclude('build')
+
     // symfony < 3
     ->exclude('app/cache')
 ;

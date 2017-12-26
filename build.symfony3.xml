@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="randock.symfony">
+<project name="randock.symfony3">
 
     <!-- symfony console location -->
-    <property name="symfony-console" value="bin/console"/>
+    <property name="symfony3-console" value="bin/console"/>
+    <property name="symfony3-kernel" value="app/AppKernel.php" />
 
     <!-- Check if symfony is available -->
-    <target name="check-symfony">
-        <available file="${symfony-console}" property="symfony.available" />
+    <target name="symfony3-check">
+        <available file="${symfony3-kernel}" property="symfony3.available" />
     </target>
 
-    <target name="symfony-prepare"
-            depends="schema:update,assetic:dump,symfony-change-owner"
-             />
-
-    <target name="symfony-copy-parameters"
-            depends="check-symfony"
-            if="symfony.available">
-        <copy file="${basedir}/app/config/parameters.yml" tofile="${basedir}/app/config/parameters.yml.back" />
-        <copy file="${basedir}/app/config/parameters.ci.yml" tofile="${basedir}/app/config/parameters.yml" />
+    <target name="symfony3-prepare"
+            depends="symfony3-check"
+            if = "symfony3.available"
+             >
+        <antcall target = "symfony3-schema:update" />
+        <antcall target = "symfony3-assetic:dump" />
+        <antcall target = "symfony3-change-owner" />
     </target>
 
-    <target name="assetic:dump"
-            depends="check-symfony"
-            if="symfony.available">
-        <exec executable="${symfony-console}">
+    <target name="symfony3-assetic:dump">
+        <exec executable="${symfony3-console}">
             <arg value="assetic:dump" />
             <arg value="--quiet" />
         </exec>
     </target>
 
-    <target name="schema:update"
-            depends="check-symfony"
-            if="symfony.available">
-        <exec executable="${symfony-console}">
+    <target name="symfony3-schema:update">
+        <exec executable="${symfony3-console}">
             <arg value="doctrine:schema:update" />
             <arg value="--force" />
         </exec>
     </target>
 
-    <target name="symfony-change-owner"
-            depends="check-symfony"
-            if="symfony.available">
+    <target name="symfony3-change-owner"
+    depends="symfony3-check"
+    if="symfony3.available">
         <exec executable="chmod">
             <arg value = "-R" />
             <arg value = "0777" />
