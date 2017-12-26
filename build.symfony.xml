@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.symfony">
+    <import file="./build.symfony3.xml" />
+    <import file="./build.symfony4.xml"  />
+
+    <target name="symfony-prepare" depends="symfony3-prepare,symfony4-prepare" />
+
+    <target name="symfony-change-owner"
+     depends="symfony3-change-owner,symfony4-change-owner" />
+
+</project>
