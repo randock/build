@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.composer">
+
+    <!-- symfony console location -->
+    <property name="composer" value="composer"/>
+
+    <!-- Check if composer is available -->
+    <target name="check-composer">
+        <available file="${basedir}/composer.json" property="composer.available"/>
+    </target>
+
+    <target name="composer-prepare"
+            depends="composer-install"
+            />
+
+    <!-- Unit test executor -->
+    <target name="composer-install"
+            unless="composer.done"
+            depends="check-composer"
+            description="Run composer install"
+            if="composer.available">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${composer}" taskname="composer">
+            <arg value="install" />
+
+            <arg value="--no-interaction" />
+            <arg value="--optimize-autoloader" />
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+    </target>
+
+    <!-- Unit test executor -->
+    <target name="composer-install-no-dev"
+            unless="composer.done"
+            depends="check-composer"
+            description="Run composer install"
+            if="composer.available">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${composer}" taskname="composer">
+            <arg value="install" />
+
+            <arg value="--no-dev" />
+            <arg value="--no-interaction" />
+            <arg value="--optimize-autoloader" />
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+    </target>
+
+</project>

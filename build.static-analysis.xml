@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.phpqa" default="static-analysis">
+
+    <!-- We define the paths to the executables here, for easier
+        modification -->
+    <property name="phpqa.binary" value="phpqa"/>
+
+    <!-- The static analyser we use (phpqa) included tools to do static analysis
+        and generate HTML reports. See https://github.com/EdgedesignCZ/phpqa -->
+    <target name="static-analysis"
+            depends="phpqa"
+            description="Performs static analysis" />
+
+    <!-- Executes QA tools: phpmetrics, phpmd and phpcpd -->
+    <target name="phpqa"
+            unless="phpqa.done"
+            description="Execute quality assurance commands.">
+
+        <exec executable="${phpqa.binary}" resultproperty="result.phpqa" taskname="phpqa">
+            <arg value="--tools" />
+            <arg value="phpmetrics,phpmd,phpcpd,phpstan:0,parallel-lint:0" />
+            <arg value="--report" />
+            <arg value="--ignoredDirs" />
+            <arg value="vendor,bin,var,web,app,tests" />
+            <arg value="--analyzedDirs" />
+            <arg value="src" />
+            <arg value="--buildDir" />
+            <arg path="${basedir}/build" />
+            <arg value="--config" />
+            <arg path="${phpqa.config_dir}" />
+
+        </exec>
+
+        <property name="phpqa.done" value="true"/>
+    </target>
+</project>

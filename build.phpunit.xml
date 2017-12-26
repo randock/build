@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.phpunit" default="phpunit">
+
+    <!-- We define the paths to the executables here, for easier
+     modification -->
+    <property name="phpunit" value="${basedir}/vendor/bin/phpunit"/>
+
+    <!-- Check if composer is available -->
+    <target name="check-phpunit">
+        <available file="${basedir}/phpunit.xml.dist" property="phpunit.available"/>
+    </target>
+
+    <target name="phpunit-copy-config"
+            depends="check-phpunit"
+            if="phpunit.available">
+        <copy file="${basedir}/phpunit.xml.dist" tofile="${basedir}/phpunit.xml" />
+    </target>
+
+    <target name="phpunit-prepare"
+            depends="phpunit-copy-config" />
+
+    <!-- Unit test executor -->
+    <target name="phpunit"
+            description="Run unit tests with PHPUnit"
+            depends="check-phpunit"
+            if="phpunit.available">
+        <exec executable="${phpunit}" resultproperty="result.phpunit" taskname="phpunit">
+            <arg value="--configuration"/>
+            <arg path="${basedir}/phpunit.xml"/>
+        </exec>
+    </target>
+
+    <!-- Unit test executor for CI -->
+    <target name="phpunit-ci"
+            unless="phpunit.done"
+            depends="prepare,phpunit-prepare"
+            description="Run unit tests with PHPUnit"
+            if="phpunit.available">
+
+        <exec executable="${phpunit}" resultproperty="result.phpunit" taskname="phpunit">
+            <arg value="--configuration"/>
+            <arg path="${basedir}/phpunit.xml"/>
+            <arg value="--log-junit" />
+            <arg path="${basedir}/build/phpunit.xml"/>
+            <arg value="--coverage-html" />
+            <arg path="${basedir}/build/coverage/"/>
+            <arg value="--coverage-text=${basedir}/build/coverage/output.txt" />
+        </exec>
+
+        <property name="phpunit.done" value="true"/>
+    </target>
+
+</project>

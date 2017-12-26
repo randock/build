@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.docker">
+
+    <!-- Check if composer is available -->
+    <target name="check-docker">
+        <available file="${basedir}/etc/docker-compose.yml.dist"
+                   property="docker.available"/>
+    </target>
+
+    <target name="docker-copy-config"
+            depends="check-docker"
+            if="docker.available">
+        <copy file="${basedir}/etc/docker-compose.yml.dist"
+              tofile="${basedir}/docker-compose.yml" />
+    </target>
+
+    <target name="docker-env"
+            depends="check-docker"
+            if="docker.available">
+        <concat destfile="${basedir}/.env">SYMFONY_ENV=test</concat>
+    </target>
+
+    <target name ="docker-compose-build"
+            depends="check-docker"
+            if="docker.available">
+        <exec executable="${docker-compose}">
+            <arg value="build" />
+            <arg value="--pull" />
+        </exec>
+    </target>
+
+    <target name ="docker-compose-up"
+            depends="check-docker"
+            if="docker.available">
+        <exec executable="${docker-compose}">
+            <arg value="up" />
+            <arg value="-d" />
+        </exec>
+    </target>
+
+    <target name="docker-prepare"
+            depends="docker-copy-config,docker-env" />
+
+    <target name="docker-run"
+            depends="docker-prepare,docker-compose-build,docker-compose-up" />
+
+
+</project>

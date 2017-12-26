@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.symfony">
+
+    <!-- symfony console location -->
+    <property name="symfony-console" value="bin/console"/>
+
+    <!-- Check if symfony is available -->
+    <target name="check-symfony">
+        <available file="${symfony-console}" property="symfony.available" />
+    </target>
+
+    <target name="symfony-prepare"
+            depends="schema:update,assetic:dump,symfony-change-owner"
+             />
+
+    <target name="symfony-copy-parameters"
+            depends="check-symfony"
+            if="symfony.available">
+        <copy file="${basedir}/app/config/parameters.yml" tofile="${basedir}/app/config/parameters.yml.back" />
+        <copy file="${basedir}/app/config/parameters.ci.yml" tofile="${basedir}/app/config/parameters.yml" />
+    </target>
+
+    <target name="assetic:dump"
+            depends="check-symfony"
+            if="symfony.available">
+        <exec executable="${symfony-console}">
+            <arg value="assetic:dump" />
+            <arg value="--quiet" />
+        </exec>
+    </target>
+
+    <target name="schema:update"
+            depends="check-symfony"
+            if="symfony.available">
+        <exec executable="${symfony-console}">
+            <arg value="doctrine:schema:update" />
+            <arg value="--force" />
+        </exec>
+    </target>
+
+    <target name="symfony-change-owner"
+            depends="check-symfony"
+            if="symfony.available">
+        <exec executable="chmod">
+            <arg value = "-R" />
+            <arg value = "0777" />
+            <arg value = "var" />
+        </exec>
+    </target>
+</project>

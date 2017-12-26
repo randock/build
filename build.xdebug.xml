@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.xdebug">
+
+    <!-- Disable xdebug for faster execution of some tasks-->
+    <target name = "xdebug-disable">
+        <exec executable="rm">
+            <arg value = "/etc/php/7.1/cli/conf.d/20-xdebug.ini" />
+            <arg value = "--force" />
+        </exec>
+    </target>
+
+            <!-- Enable Xdebug -->
+    <target name = "xdebug-enable">
+        <antcall target = "xdebug-disable" />
+        <exec executable="ln">
+            <arg value = "-s" />
+            <arg value = "/etc/php/7.1/mods-available/xdebug.ini" />
+            <arg value = "/etc/php/7.1/cli/conf.d/20-xdebug.ini" />
+        </exec>
+    </target>
+</project>

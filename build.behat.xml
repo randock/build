@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.behat" default="behat">
+
+    <!-- We define the paths to the executables here, for easier
+     modification -->
+    <property name="behat" value="${basedir}/vendor/bin/behat"/>
+
+    <!-- Check if behat is available -->
+    <target name="check-behat">
+        <available file="${basedir}/behat.yml" property="behat.available"/>
+    </target>
+
+    <!-- Unit test executor -->
+    <target name="behat"
+            unless="behat.done"
+            depends="check-behat"
+            description="Run behat tests"
+            if="behat.available">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${behat}" resultproperty="result.behat" taskname="behat">
+            <arg value="--no-interaction" />
+
+            <arg value="--config"/>
+            <arg path="${basedir}/behat.yml"/>
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+    </target>
+
+    <!-- Unit test executor for CI -->
+    <target name="behat-ci"
+            unless="behat.done"
+            depends="prepare,check-behat"
+            description="Run behat tests with junit output"
+            if="behat.available">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${behat}" resultproperty="result.behat" taskname="behat">
+            <arg value="--no-interaction" />
+
+            <arg value="--config"/>
+            <arg path="${basedir}/behat.yml"/>
+
+            <arg value="--verbose" />
+
+            <arg value="--format"/>
+            <arg value="pretty"/>
+            <arg value="--out"/>
+            <arg value="std"/>
+
+            <arg value="--format"/>
+            <arg value="junit"/>
+            <arg value="--out"/>
+            <arg path="${basedir}/build/behat"/>
+
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+        <property name="behat.done" value="true"/>
+    </target>
+
+</project>

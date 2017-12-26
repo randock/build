@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock" default="validate">
+
+    <!-- service name used for docker commands -->
+    <property name="docker-compose" value="docker-compose"/>
+    <property name="docker.service_name" value="fpm" />
+    <property name="phpqa.config_dir" value="vendor/randock/common-bundle" />
+
+    <!-- Docker methods -->
+    <!--<import file="./build.docker.xml" />-->
+
+    <!-- composer methods -->
+    <!--<import file="./build.composer.xml" />-->
+
+    <!-- symfony methods -->
+    <import file="./build.symfony.xml" />
+
+    <!-- xdebug methods -->
+    <import file="./build.xdebug.xml" />
+
+    <!-- PHP-cs-fixer methods -->
+    <import file="./build.php-cs-fixer.xml" />
+
+    <!-- PHP unit methods -->
+    <import file="./build.phpunit.xml" />
+
+    <!-- behat methods -->
+    <import file="./build.behat.xml" />
+
+    <!-- Linting methods -->
+    <import file="./build.lint.xml" />
+
+    <!-- Static analysis methods -->
+    <import file="./build.static-analysis.xml" />
+
+    <!-- Alias for php-cs-fixer at the moment, might fix more stuff in the future -->
+    <target name="fix" depends="php-cs-fixer" />
+
+    <target name="ci-setup">
+
+        <exec executable="${docker-compose}" failonerror="true">
+            <arg value = "exec" />
+            <arg value = "-T" />
+            <arg value = "${docker.service_name}" />
+
+            <arg value = "ant" />
+            <arg value = "ci-prepare" />
+        </exec>
+    </target>
+
+    <target name="ci-run">
+        <exec executable="${docker-compose}" failonerror="true">
+            <arg value = "exec" />
+            <arg value = "-T" />
+            <arg value = "${docker.service_name}" />
+
+            <arg value = "ant" />
+            <arg value = "ci" />
+        </exec>
+    </target>
+
+    <!-- this is the main entry point run within the containers -->
+    <target name="ci-prepare"
+            depends="prepare,phpunit-prepare,symfony-prepare" />
+
+    <!-- The CI job is executed by the CI server, to verify, validate and
+         generate QA reports. -->
+    <target name="ci"
+            depends="lint,static-analysis,php-cs-fixer-ci,phpunit-ci,symfony-change-owner,behat-ci,-check-failure"
+            description="Performs static analysis, runs the tests, and generates project documentation" />
+
+    <!-- The validate job is the default job, executed by the developers
+         before pushing (can be configured in the pre push hook) -->
+    <target name="validate"
+            depends="prepare,lint,php-cs-fixer-ci,phpunit,behat,-check-failure"
+            description="Performs a lint check and runs the tests"/>
+
+    <target name="pre-push"
+            depends="prepare,lint,php-cs-fixer-ci,phpunit,-check-failure"
+            description="Basic checks for pre push hook"/>
+
+    <!-- Method to check result of above commands -->
+    <target name="-check-failure">
+        <fail message="PHPQA errors">
+            <condition>
+                <and>
+                    <isset property="result.phpqa" />
+                    <not>
+                        <equals arg1="${result.phpqa}" arg2="0"/>
+                    </not>
+                </and>
+            </condition>
+        </fail>
+        <fail message="Unit test errors">
+            <condition>
+                <and>
+                    <isset property="result.phpunit" />
+                    <not>
+                        <equals arg1="${result.phpunit}" arg2="0"/>
+                    </not>
+                </and>
+            </condition>
+        </fail>
+        <fail message="Behat errors">
+            <condition>
+                <and>
+                    <isset property="result.behat" />
+                    <not>
+                        <equals arg1="${result.behat}" arg2="0"/>
+                    </not>
+                </and>
+            </condition>
+        </fail>
+        <fail message="Code style errors, run php-cs-fixer">
+            <condition>
+                <and>
+                    <isset property="result.php-cs-fixer"/>
+                    <not>
+                        <equals arg1="${result.php-cs-fixer}" arg2="0"/>
+                    </not>
+                </and>
+            </condition>
+        </fail>
+    </target>
+
+    <!-- Internally used to cleanup previous builds -->
+    <target name="clean"
+            unless="clean.done"
+            description="Cleanup build artifacts">
+        <delete dir="${basedir}/build/coverage"/>
+        <property name="clean.done" value="true"/>
+    </target>
+
+    <!-- Internally used to prepare new builds -->
+    <target name="prepare"
+            unless="prepare.done"
+            depends="clean"
+            description="Prepare for build">
+        <mkdir dir="${basedir}/build/coverage"/>
+        <mkdir dir="${basedir}/build/behat"/>
+        <property name="prepare.done" value="true"/>
+    </target>
+
+</project>

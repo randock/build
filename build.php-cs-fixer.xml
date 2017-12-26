@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.php-cs-fixer" default="php-cs-fixer">
+
+    <!-- xdebug methods -->
+    <import file="./build.xdebug.xml" />
+
+    <!-- We define the paths to the executables here, for easier access -->
+    <property name="php-cs-fixer" value="php-cs-fixer"/>
+
+    <!-- Code style fixes executor. Also disables and re-enables XDEBUG -->
+    <target name="php-cs-fixer"
+            description="Execute php-cs-fixer, fixing all errors found.">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${php-cs-fixer}" resultproperty="result.php-cs-fixer" taskname="php-cs-fixer">
+            <arg value="fix" />
+
+            <arg value="--using-cache" />
+            <arg value="no" />
+
+            <arg value="--config"/>
+            <arg path="${basedir}/.php_cs"/>
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+    </target>
+
+    <target name="php-cs-fixer-ci"
+            unless="php-cs-fixer.done"
+            depends="prepare"
+            description="Run php-cs-fixer">
+
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
+        <exec executable="${php-cs-fixer}" resultproperty="result.php-cs-fixer" taskname="php-cs-fixer">
+            <redirector output="${basedir}/build/php-cs-fixer.xml" alwayslog="true">
+                <outputfilterchain>
+                    <headfilter skip="1"/>
+                </outputfilterchain>
+            </redirector>
+            <arg value="fix" />
+
+            <arg value="--dry-run" />
+
+            <arg value="--using-cache" />
+            <arg value="no" />
+
+            <arg value="--format"/>
+            <arg value="junit"/>
+
+            <arg value="--config"/>
+            <arg path="${basedir}/.php_cs"/>
+        </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
+
+        <property name="php-cs-fixer.done" value="true"/>
+    </target>
+
+</project>
