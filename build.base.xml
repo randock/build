@@ -6,14 +6,9 @@
     <property name="docker.service_name" value="fpm" />
     <property name="phpqa.config_dir" value="vendor/randock/common-bundle" />
 
-    <!-- Docker methods -->
-    <!--<import file="./build.docker.xml" />-->
-
-    <!-- composer methods -->
-    <!--<import file="./build.composer.xml" />-->
-
     <!-- symfony methods -->
-    <import file="./build.symfony.xml" />
+    <import file="./build.symfony3.xml" as="sf3" />
+    <import file="./build.symfony4.xml" as="sf4" />
 
     <!-- xdebug methods -->
     <import file="./build.xdebug.xml" />

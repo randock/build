@@ -1,0 +1,6 @@
+{
+  "name": "randock/build",
+  "description": "Randock Build",
+  "type": "library",
+  "license": "MIT"
+}

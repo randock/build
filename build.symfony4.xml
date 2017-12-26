@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="randock.symfony">
+
+    <!-- symfony console location -->
+    <property name="symfony-console" value="bin/console"/>
+    <property name="yarn" value="/usr/bin/yarn"/>
+
+    <!-- Check if symfony is available -->
+    <target name="check-symfony">
+        <available file="${symfony-console}" property="symfony.available" />
+    </target>
+
+    <!-- Check if yarn is available -->
+    <target name="check-yarn">
+        <available file="${yarn}" property="yarn.available" />
+    </target>
+
+    <target name="symfony-prepare"
+            depends="schema:update,webpack:build,symfony-change-owner"
+    />
+
+    <target name="webpack:build"
+            depends="check-yarn"
+            if="yarn.available">
+        <exec executable="${yarn}">
+            <arg value="build" />
+        </exec>
+    </target>
+
+    <target name="schema:update"
+            depends="check-symfony"
+            if="symfony.available">
+        <exec executable="${symfony-console}">
+            <arg value="doctrine:schema:update" />
+            <arg value="--force" />
+        </exec>
+    </target>
+
+    <target name="symfony-change-owner"
+            depends="check-symfony"
+            if="symfony.available">
+        <exec executable="chmod">
+            <arg value = "-R" />
+            <arg value = "0777" />
+            <arg value = "var" />
+        </exec>
+    </target>
+</project>
