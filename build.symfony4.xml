@@ -26,6 +26,9 @@
             depends="yarn-check"
             if="yarn.available">
         <exec executable="${yarn}">
+            <arg value="install" />
+        </exec>
+        <exec executable="${yarn}">
             <arg value="build" />
         </exec>
     </target>
