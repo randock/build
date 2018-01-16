@@ -7,9 +7,13 @@
 
     <!-- Check if symfony is available -->
     <target name="symfony4-check">
-        <available file="${yarn}" property="symfony4.available" />
+        <available file="${symfony4-console}" property="symfony4.available" />
     </target>
 
+    <!-- Check if yarn is available -->
+    <target name="yarn-check">
+        <available file="${yarn}" property="yarn.available" />
+    </target>
     <target name="symfony4-prepare"
             depends="symfony4-check"
             if="symfony4.available">
@@ -17,7 +21,10 @@
         <antcall target= "symfony4-webpack:build" />
         <antcall target= "symfony4-change-owner" />
     </target>
-    <target name="symfony4-webpack:build">
+
+    <target name="symfony4-webpack:build"
+            depends="yarn-check"
+            if="yarn.available">
         <exec executable="${yarn}">
             <arg value="build" />
         </exec>
