@@ -33,7 +33,7 @@
     <target name="symfony4-change-owner"
             depends="symfony4-check"
             if="symfony4.available">
-    <exec executable="chmod">
+        <exec executable="chmod">
             <arg value = "-R" />
             <arg value = "0777" />
             <arg value = "var" />

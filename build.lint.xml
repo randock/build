@@ -11,62 +11,62 @@
             depends="lint-twig,lint-yml"
             description="Performs static analysis" />
 
-            <!-- This executes the PHP internal linter (php -l) -->
+    <!-- This executes the PHP internal linter (php -l) -->
     <target name="lint-php"
             unless="lint-php.done"
             description="Perform syntax check of sourcecode files">
-    <apply executable="php" taskname="lint" failonerror="true">
-        <arg value="-l" />
+        <apply executable="php" taskname="lint" failonerror="true">
+            <arg value="-l" />
 
-        <fileset dir="${basedir}/src" errorOnMissingDir = "false">
-            <include name="**/*.php" />
-        </fileset>
+            <fileset dir="${basedir}/src" errorOnMissingDir = "false">
+                <include name="**/*.php" />
+            </fileset>
 
-        <fileset dir="${basedir}/tests" errorOnMissingDir = "false">
-            <include name="**/*.php" />
-        </fileset>
+            <fileset dir="${basedir}/tests" errorOnMissingDir = "false">
+                <include name="**/*.php" />
+            </fileset>
 
-        <fileset dir="${basedir}/app" errorOnMissingDir = "false">
-            <include name="**/*.php" />
-        </fileset>
+            <fileset dir="${basedir}/app" errorOnMissingDir = "false">
+                <include name="**/*.php" />
+            </fileset>
 
-    </apply>
+        </apply>
 
-    <property name="lint-php.done" value="true"/>
+        <property name="lint-php.done" value="true"/>
     </target>
 
-            <!-- Executes the symfony provided twig linter -->
+    <!-- Executes the symfony provided twig linter -->
     <target name="lint-twig"
             unless="lint-twig.done"
             description="Perform syntax check of twig files"
             depends="-check-symfony-console"
             if="symfony-console.exists">
-    <apply executable="${symfony-console}" taskname="lint-twig" failonerror="true">
-        <arg value="lint:twig" />
-        <dirset dir = "${basedir}">
-            <include name="app" />
-            <include name="src" />
-        </dirset>
-    </apply>
+        <apply executable="${symfony4-console}" taskname="lint-twig" failonerror="true">
+            <arg value="lint:twig" />
+            <dirset dir = "${basedir}">
+                <include name="app" />
+                <include name="src" />
+            </dirset>
+        </apply>
 
-    <property name="lint-twig.done" value="true"/>
+        <property name="lint-twig.done" value="true"/>
     </target>
 
-            <!-- Executes the symfony provided yaml linter -->
+    <!-- Executes the symfony provided yaml linter -->
     <target name="lint-yml"
             unless="lint-yml.done"
             description="Perform syntax check of yml files"
             depends="-check-symfony-console"
             if="symfony-console.exists">
-    <apply executable="${symfony-console}" taskname="lint-yml" failonerror="true">
-        <arg value="lint:yaml" />
-        <dirset dir = "${basedir}">
-            <include name="app" />
-            <include name="src" />
-        </dirset>
-    </apply>
+        <apply executable="${symfony4-console}" taskname="lint-yml" failonerror="true">
+            <arg value="lint:yaml" />
+            <dirset dir = "${basedir}">
+                <include name="app" />
+                <include name="src" />
+            </dirset>
+        </apply>
 
-    <property name="lint-yml.done" value="true"/>
+        <property name="lint-yml.done" value="true"/>
     </target>
 
 </project>
