@@ -4,6 +4,7 @@
     <!-- symfony console location -->
     <property name="symfony4-console" value="bin/console" />
     <property name="yarn" value="/usr/bin/yarn" />
+    <property environment="env"/>
 
     <!-- Check if symfony is available -->
     <target name="symfony4-check">
