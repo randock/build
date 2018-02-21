@@ -22,7 +22,28 @@
         <antcall target= "symfony4-change-owner" />
     </target>
 
-    <target name="symfony4-webpack:build"
+    <target name="symfony4-webpack:build">
+        <antcall target="symfony4-webpack:build:prod-with-check"/>
+        <antcall target="symfony4-webpack:build:dev-with-check"/>
+    </target>
+
+    <target name="symfony4-webpack:build:prod-with-check" depends="symfony-environment-check" if="symfony.prod">
+        <antcall target="symfony4-webpack:build:prod"/>
+    </target>
+    <target name="symfony4-webpack:build:dev-with-check" depends="symfony-environment-check" if="symfony.dev">
+        <antcall target="symfony4-webpack:build:dev"/>
+    </target>
+
+    <target name="symfony-environment-check">
+        <condition property="symfony.prod">
+            <equals arg1="${env.APP_ENV}" arg2="prod"/>
+        </condition>
+        <condition property="symfony.dev">
+            <equals arg1="${env.APP_ENV}" arg2="dev"/>
+        </condition>
+    </target>
+
+    <target name="symfony4-webpack:build:prod"
             depends="yarn-check"
             if="yarn.available">
         <exec executable="${yarn}">
@@ -30,6 +51,18 @@
         </exec>
         <exec executable="${yarn}">
             <arg value="build" />
+        </exec>
+    </target>
+
+    <target name="symfony4-webpack:build:dev"
+            depends="yarn-check"
+            if="yarn.available">
+        <exec executable="${yarn}">
+            <arg value="install" />
+        </exec>
+        <exec executable="${yarn}">
+            <arg value="encore" />
+            <arg value="dev" />
         </exec>
     </target>
 
