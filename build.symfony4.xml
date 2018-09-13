@@ -46,6 +46,9 @@
         <condition property="symfony.dev">
             <equals arg1="${env.APP_ENV}" arg2="dev"/>
         </condition>
+        <condition property="symfony.test">
+            <equals arg1="${env.APP_ENV}" arg2="test"/>
+        </condition>
     </target>
 
     <target name="symfony4-webpack:build:prod"
