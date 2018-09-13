@@ -26,6 +26,7 @@
     <target name="symfony4-webpack:build">
         <antcall target="symfony4-webpack:build:prod-with-check"/>
         <antcall target="symfony4-webpack:build:dev-with-check"/>
+        <antcall target="symfony4-webpack:build:test-with-check"/>
     </target>
 
     <target name="symfony4-webpack:build:prod-with-check" depends="symfony-environment-check" if="symfony.prod">
@@ -33,6 +34,9 @@
     </target>
     <target name="symfony4-webpack:build:dev-with-check" depends="symfony-environment-check" if="symfony.dev">
         <antcall target="symfony4-webpack:build:dev"/>
+    </target>
+    <target name="symfony4-webpack:build:test-with-check" depends="symfony-environment-check" if="symfony.test">
+        <antcall target="symfony4-webpack:build:test"/>
     </target>
 
     <target name="symfony-environment-check">
