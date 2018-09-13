@@ -36,7 +36,7 @@
         <antcall target="symfony4-webpack:build:dev"/>
     </target>
     <target name="symfony4-webpack:build:test-with-check" depends="symfony-environment-check" if="symfony.test">
-        <antcall target="symfony4-webpack:build:test"/>
+        <antcall target="symfony4-webpack:build:dev"/>
     </target>
 
     <target name="symfony-environment-check">
