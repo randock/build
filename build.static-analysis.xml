@@ -16,20 +16,25 @@
             unless="phpqa.done"
             description="Execute quality assurance commands.">
 
+        <!-- Disable xdebug -->
+        <antcall target = "xdebug-disable" />
+
         <exec executable="${phpqa.binary}" resultproperty="result.phpqa" taskname="phpqa">
             <arg value="--tools" />
             <arg value="phpmetrics,phpmd,phpcpd,phpstan:0,parallel-lint:0" />
             <arg value="--report" />
             <arg value="--ignoredDirs" />
-            <arg value="vendor,bin,var,web,app,tests" />
+            <arg value="public,templates,translations,etc,config,vendor,bin,var,web,app,tests" />
             <arg value="--analyzedDirs" />
             <arg value="src" />
             <arg value="--buildDir" />
             <arg path="${basedir}/build" />
             <arg value="--config" />
             <arg path="${phpqa.config_dir}" />
-
         </exec>
+
+        <!-- Enable xdebug -->
+        <antcall target = "xdebug-enable" />
 
         <property name="phpqa.done" value="true"/>
     </target>
