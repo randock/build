@@ -4,7 +4,7 @@
     <!-- Disable xdebug for faster execution of some tasks-->
     <target name = "xdebug-disable">
         <exec executable="rm">
-            <arg value = "/etc/php/7.1/cli/conf.d/20-xdebug.ini" />
+            <arg value = "/etc/php/${php_version}/cli/conf.d/20-xdebug.ini" />
             <arg value = "--force" />
         </exec>
     </target>
@@ -14,8 +14,8 @@
         <antcall target = "xdebug-disable" />
         <exec executable="ln">
             <arg value = "-s" />
-            <arg value = "/etc/php/7.1/mods-available/xdebug.ini" />
-            <arg value = "/etc/php/7.1/cli/conf.d/20-xdebug.ini" />
+            <arg value = "/etc/php/${php_version}/mods-available/xdebug.ini" />
+            <arg value = "/etc/php/${php_version}/cli/conf.d/20-xdebug.ini" />
         </exec>
     </target>
 </project>

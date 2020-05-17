@@ -4,12 +4,17 @@
     <!-- symfony console location -->
     <property name="symfony4-console" value="bin/console" />
     <property name="yarn" value="/usr/bin/yarn" />
+    <property environment="env"/>
 
     <!-- Check if symfony is available -->
     <target name="symfony4-check">
-        <available file="${yarn}" property="symfony4.available" />
+        <available file="${symfony4-console}" property="symfony4.available" />
     </target>
 
+    <!-- Check if yarn is available -->
+    <target name="yarn-check">
+        <available file="${yarn}" property="yarn.available" />
+    </target>
     <target name="symfony4-prepare"
             depends="symfony4-check"
             if="symfony4.available">
@@ -17,9 +22,55 @@
         <antcall target= "symfony4-webpack:build" />
         <antcall target= "symfony4-change-owner" />
     </target>
+
     <target name="symfony4-webpack:build">
+        <antcall target="symfony4-webpack:build:prod-with-check"/>
+        <antcall target="symfony4-webpack:build:dev-with-check"/>
+        <antcall target="symfony4-webpack:build:test-with-check"/>
+    </target>
+
+    <target name="symfony4-webpack:build:prod-with-check" depends="symfony-environment-check" if="symfony.prod">
+        <antcall target="symfony4-webpack:build:prod"/>
+    </target>
+    <target name="symfony4-webpack:build:dev-with-check" depends="symfony-environment-check" if="symfony.dev">
+        <antcall target="symfony4-webpack:build:dev"/>
+    </target>
+    <target name="symfony4-webpack:build:test-with-check" depends="symfony-environment-check" if="symfony.test">
+        <antcall target="symfony4-webpack:build:dev"/>
+    </target>
+
+    <target name="symfony-environment-check">
+        <condition property="symfony.prod">
+            <equals arg1="${env.APP_ENV}" arg2="prod"/>
+        </condition>
+        <condition property="symfony.dev">
+            <equals arg1="${env.APP_ENV}" arg2="dev"/>
+        </condition>
+        <condition property="symfony.test">
+            <equals arg1="${env.APP_ENV}" arg2="test"/>
+        </condition>
+    </target>
+
+    <target name="symfony4-webpack:build:prod"
+            depends="yarn-check"
+            if="yarn.available">
+        <exec executable="${yarn}">
+            <arg value="install" />
+        </exec>
         <exec executable="${yarn}">
             <arg value="build" />
+        </exec>
+    </target>
+
+    <target name="symfony4-webpack:build:dev"
+            depends="yarn-check"
+            if="yarn.available">
+        <exec executable="${yarn}">
+            <arg value="install" />
+        </exec>
+        <exec executable="${yarn}">
+            <arg value="encore" />
+            <arg value="dev" />
         </exec>
     </target>
 
@@ -33,7 +84,7 @@
     <target name="symfony4-change-owner"
             depends="symfony4-check"
             if="symfony4.available">
-    <exec executable="chmod">
+        <exec executable="chmod">
             <arg value = "-R" />
             <arg value = "0777" />
             <arg value = "var" />
