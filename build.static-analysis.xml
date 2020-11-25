@@ -21,7 +21,7 @@
 
         <exec executable="${phpqa.binary}" resultproperty="result.phpqa" taskname="phpqa">
             <arg value="--tools" />
-            <arg value="phpmetrics,phpmd,phpcpd,phpstan:0,parallel-lint:0" />
+            <arg value="phpmetrics,phpmd,phpstan:0,parallel-lint:0" />
             <arg value="--report" />
             <arg value="--ignoredDirs" />
             <arg value="public,templates,translations,etc,config,vendor,bin,var,web,app,tests" />
