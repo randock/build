@@ -11,7 +11,7 @@
             depends="phpqa"
             description="Performs static analysis" />
 
-    <!-- Executes QA tools: phpmetrics, phpmd and phpcpd -->
+    <!-- Executes QA tools: phpstan, phpmd and phpcpd -->
     <target name="phpqa"
             unless="phpqa.done"
             description="Execute quality assurance commands.">
@@ -21,7 +21,7 @@
 
         <exec executable="${phpqa.binary}" resultproperty="result.phpqa" taskname="phpqa">
             <arg value="--tools" />
-            <arg value="phpmetrics,phpmd,phpstan:0,parallel-lint:0" />
+            <arg value="phpmd,phpstan:0,parallel-lint:0" />
             <arg value="--report" />
             <arg value="--ignoredDirs" />
             <arg value="public,templates,translations,etc,config,vendor,bin,var,web,app,tests" />
