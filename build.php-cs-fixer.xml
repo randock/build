@@ -21,7 +21,7 @@
             <arg value="no" />
 
             <arg value="--config"/>
-            <arg path="${basedir}/.php_cs"/>
+            <arg path="${basedir}/.php-cs-fixer.php"/>
         </exec>
 
         <!-- Enable xdebug -->
@@ -54,7 +54,7 @@
             <arg value="junit"/>
 
             <arg value="--config"/>
-            <arg path="${basedir}/.php_cs"/>
+            <arg path="${basedir}/.php-cs-fixer.php"/>
         </exec>
 
         <!-- Enable xdebug -->
