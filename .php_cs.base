@@ -32,6 +32,7 @@ return (new PhpCsFixer\Config())
         // custom config
         'array_syntax' => ['syntax' => 'short'],
         'combine_consecutive_unsets' => true,
+        'phpdoc_to_comment' => ['ignored_tags' => ['var', 'phpstan-ignore-line', 'phpstan-ignore-next-line']],
         'general_phpdoc_annotation_remove' => ['annotations' => ['expectedException', 'expectedExceptionMessage', 'expectedExceptionMessageRegExp']],
         'heredoc_to_nowdoc' => true,
         'no_extra_blank_lines' => ['tokens' => ['break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block']],

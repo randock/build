@@ -42,9 +42,6 @@
             <arg path="${basedir}/phpunit.xml"/>
             <arg value="--log-junit" />
             <arg path="${basedir}/build/phpunit.xml"/>
-            <arg value="--coverage-html" />
-            <arg path="${basedir}/build/coverage/"/>
-            <arg value="--coverage-text=${basedir}/build/coverage/output.txt" />
         </exec>
 
         <property name="phpunit.done" value="true"/>
