@@ -23,8 +23,7 @@ return (new PhpCsFixer\Config())
         '@Symfony' => true,
         '@Symfony:risky' => true,
 
-        // php7.1+
-        '@PHP71Migration' => true,
+        '@PHP83Migration' => true,
 
         // php7+
         'declare_strict_types' => true,
