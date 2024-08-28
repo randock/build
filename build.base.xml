@@ -2,7 +2,7 @@
 <project name="randock" default="validate">
 
     <!-- service name used for docker commands -->
-    <property name="docker-compose" value="docker compose"/>
+    <property name="docker" value="docker"/>
     <property name="docker.service_name" value="fpm" />
     <property name="phpqa.config_dir" value="vendor/randock/build" />
 
@@ -32,7 +32,8 @@
 
     <target name="ci-setup">
 
-        <exec executable="${docker-compose}" failonerror="true">
+        <exec executable="${docker}" failonerror="true">
+            <arg value = "compose" />
             <arg value = "exec" />
             <arg value = "-T" />
             <arg value = "${docker.service_name}" />
@@ -43,7 +44,8 @@
     </target>
 
     <target name="ci-run">
-        <exec executable="${docker-compose}" failonerror="true">
+        <exec executable="${docker}" failonerror="true">
+            <arg value = "compose" />
             <arg value = "exec" />
             <arg value = "-T" />
             <arg value = "${docker.service_name}" />
